@@ -55,7 +55,7 @@
         <dependency>
             <groupId>tech.rsqn.useful-things</groupId>
             <artifactId>simple-utilities</artifactId>
-            <version>1.0.27-SNAPSHOT</version>
+            <version>1.0.28</version>
             <scope>compile</scope>
         </dependency>
 
