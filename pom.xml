@@ -13,8 +13,8 @@
     <packaging>jar</packaging>
 
     <name>simple-cluster-utilities</name>
-    <description>A collection of heavier utilities used by rsqn.tech opensource projects.</description>
-    <url>https://github.com/rsqn/useful-things</url>
+    <description>A collection of simple cluster utilities to solve common application problems.</description>
+    <url>https://github.com/rsqn/simple-cluster-utilities</url>
 
     <licenses>
         <license>
@@ -31,6 +31,14 @@
             <organizationUrl>http://www.roguesquadron.com.au</organizationUrl>
         </developer>
     </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:rsqn/simple-cluster-utilities.git</connection>
+        <developerConnection>scm:git:git@github.com:rsqn/simple-cluster-utilities.git</developerConnection>
+        <url>https://github.com/mandrewes/simple-cluster-utilities</url>
+        <tag>HEAD</tag>
+    </scm>
+
 
     <properties>
         <spring.version>4.3.2.RELEASE</spring.version>
