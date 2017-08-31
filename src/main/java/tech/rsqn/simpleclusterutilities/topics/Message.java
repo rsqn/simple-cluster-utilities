@@ -4,7 +4,9 @@ import tech.rsqn.useful.things.identifiers.UIDHelper;
 
 import java.io.Serializable;
 
-public class Message<T extends Serializable> {
+public class Message <T extends Serializable> implements Serializable {
+    private static final long serialVersionUID = -801231596423101532L;
+
     private String id;
     private Subscription source;
     private T payload;

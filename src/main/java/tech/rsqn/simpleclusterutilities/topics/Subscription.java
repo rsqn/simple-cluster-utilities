@@ -1,6 +1,10 @@
 package tech.rsqn.simpleclusterutilities.topics;
 
-public class Subscription {
+import java.io.Serializable;
+
+public class Subscription implements Serializable {
+    private static final long serialVersionUID = -1278304076149424163L;
+
     private String id;
 
     public String getId() {
