@@ -35,7 +35,7 @@ public class TopicMasterSlaveSelector implements MasterSlaveSelector {
 
     public void init() {
         mySelf = new MasterSlaveMember();
-        mySelf.setId(UIDHelper.generate());
+        mySelf.setId("mid" + UIDHelper.generate());
         members = new ArrayList<>();
 
         topic.subscribe((Message m) -> {
@@ -76,11 +76,18 @@ public class TopicMasterSlaveSelector implements MasterSlaveSelector {
         }
     }
 
+
     private void determineMaster() {
+        List<MasterSlaveMember> toDelete = new ArrayList<>();
+
         for (MasterSlaveMember member : members) {
             if (member.getExpires() < System.currentTimeMillis()) {
-                members.remove(member);
+                toDelete.add(member);
             }
+        }
+
+        for (MasterSlaveMember member : toDelete) {
+            members.remove(member);
         }
 
         Collections.sort(members, new Comparator<MasterSlaveMember>() {
@@ -109,7 +116,7 @@ public class TopicMasterSlaveSelector implements MasterSlaveSelector {
             iAmMaster = false;
         }
 
-        if ( iWasMaster != iAmMaster) {
+        if (iWasMaster != iAmMaster) {
             logger.info("Master state change from " + iWasMaster + " to " + iAmMaster);
         }
 

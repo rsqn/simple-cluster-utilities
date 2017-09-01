@@ -8,7 +8,6 @@ public class MasterSlaveMember implements Serializable {
     private long expires;
     private long ts;
 
-
     public MasterSlaveMember() {
         startTime = System.currentTimeMillis();
     }
@@ -49,23 +48,16 @@ public class MasterSlaveMember implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof MasterSlaveMember)) return false;
 
         MasterSlaveMember that = (MasterSlaveMember) o;
 
-        if (startTime != that.startTime) return false;
-        if (expires != that.expires) return false;
-        if (ts != that.ts) return false;
-        return id.equals(that.id);
+        return id != null ? id.equals(that.id) : that.id == null;
     }
 
     @Override
     public int hashCode() {
-        int result = id.hashCode();
-        result = 31 * result + (int) (startTime ^ (startTime >>> 32));
-        result = 31 * result + (int) (expires ^ (expires >>> 32));
-        result = 31 * result + (int) (ts ^ (ts >>> 32));
-        return result;
+        return id != null ? id.hashCode() : 0;
     }
 
     @Override
