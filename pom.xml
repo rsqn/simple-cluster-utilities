@@ -9,7 +9,7 @@
 
     <groupId>tech.rsqn.simple-cluster-utilities</groupId>
     <artifactId>simple-cluster-utilities</artifactId>
-    <version>1.0.5</version>
+    <version>1.0.6-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>simple-cluster-utilities</name>
@@ -20,7 +20,7 @@
         <connection>scm:git:git@github.com:rsqn/simple-cluster-utilities.git</connection>
         <developerConnection>scm:git:git@github.com:rsqn/simple-cluster-utilities.git</developerConnection>
         <url>https://github.com/mandrewes/simple-cluster-utilities</url>
-        <tag>simple-cluster-utilities-1.0.5</tag>
+        <tag>HEAD</tag>
     </scm>
 
     <licenses>
