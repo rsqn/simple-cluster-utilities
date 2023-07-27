@@ -1,16 +1,15 @@
-package tech.rsqn.simpleclusterutilities.masterslave;
+package tech.rsqn.simpleclusterutilities.masterslave.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 
-public class MasterSlaveMember implements Serializable {
+public class Member implements Serializable {
+    private String scope;
     private String id;
     private long startTime;
     private long expires;
     private long ts;
-
-    public MasterSlaveMember() {
-        startTime = System.currentTimeMillis();
-    }
+    private long ttl;
 
     public long getExpires() {
         return expires;
@@ -44,26 +43,49 @@ public class MasterSlaveMember implements Serializable {
         this.id = id;
     }
 
+    public String getScope() {
+        return scope;
+    }
+
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+
+    public boolean isExpired() {
+        return expires < System.currentTimeMillis();
+    }
+
+    public long getTtl() {
+        return ttl;
+    }
+
+    public void setTtl(long ttl) {
+        this.ttl = ttl;
+    }
+
+    public void updateTimestamps() {
+        setTs(System.currentTimeMillis());
+        setExpires(getTs() + ttl);
+    }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof MasterSlaveMember)) return false;
-
-        MasterSlaveMember that = (MasterSlaveMember) o;
-
-        return id != null ? id.equals(that.id) : that.id == null;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member that = (Member) o;
+        return Objects.equals(scope, that.scope) && Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return id != null ? id.hashCode() : 0;
+        return Objects.hash(scope, id);
     }
 
     @Override
     public String toString() {
         return "MasterSlaveMember{" +
-                "id='" + id + '\'' +
+                "scope='" + scope + '\'' +
+                ", id='" + id + '\'' +
                 ", startTime=" + startTime +
                 ", expires=" + expires +
                 ", ts=" + ts +
