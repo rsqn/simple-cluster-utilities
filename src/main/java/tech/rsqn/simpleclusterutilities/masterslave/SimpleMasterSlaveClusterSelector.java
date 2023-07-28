@@ -148,7 +148,7 @@ public class SimpleMasterSlaveClusterSelector implements ClusterView {
             logger.info("Master state change from " + iWasMaster + " to " + iAmMaster);
         }
 
-        logger.info("Members size is " + members.size());
+        logger.trace("Members size is " + members.size());
 
     }
 
