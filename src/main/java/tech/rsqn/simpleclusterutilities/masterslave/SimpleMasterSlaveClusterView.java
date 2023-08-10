@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 
 
 @Component
-public class SimpleMasterSlaveClusterView implements ClusterView , InitializingBean {
+public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBean {
     private static Logger LOG = LoggerFactory.getLogger(SimpleMasterSlaveClusterView.class);
 
     @Autowired
@@ -68,7 +68,7 @@ public class SimpleMasterSlaveClusterView implements ClusterView , InitializingB
         mySelf.setScope(scope);
         mySelf.setTtl(ttlMs);
 
-        stabilisationPeriodMs = heartbeatMs*2;
+        stabilisationPeriodMs = heartbeatMs * 2;
 
         keepRunning = true;
         t = new Thread() {
@@ -146,11 +146,15 @@ public class SimpleMasterSlaveClusterView implements ClusterView , InitializingB
         }
 
         Member detectedMaster = members.get(0);
-        if ( master == null ) {
+        boolean logView = false;
+
+        if (master == null) {
             LOG.info("First master selection " + detectedMaster);
+            logView = true;
         } else {
-            if ( !detectedMaster.equals(master)) {
+            if (!detectedMaster.equals(master)) {
                 LOG.info("New master selected " + detectedMaster);
+                logView = true;
             }
         }
         master = detectedMaster;
@@ -160,6 +164,9 @@ public class SimpleMasterSlaveClusterView implements ClusterView , InitializingB
             iAmMaster = false;
         }
         LOG.trace(this.toString());
+        if (logView) {
+            LOG.info(this.toString());
+        }
     }
 
 
