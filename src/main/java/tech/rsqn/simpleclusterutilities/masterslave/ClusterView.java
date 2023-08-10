@@ -8,5 +8,7 @@ public interface ClusterView {
 
     boolean isMaster();
 
+    boolean isReady();
+
     List<Member> getMembers();
 }

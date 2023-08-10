@@ -181,6 +181,11 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
     }
 
     @Override
+    public boolean isReady() {
+        return master != null;
+    }
+
+    @Override
     public List<Member> getMembers() {
         synchronized (reportedMembers) {
             return new ArrayList<>(reportedMembers);
