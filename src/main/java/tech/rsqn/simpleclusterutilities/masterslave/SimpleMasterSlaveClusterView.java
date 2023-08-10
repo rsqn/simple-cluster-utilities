@@ -2,6 +2,9 @@ package tech.rsqn.simpleclusterutilities.masterslave;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import tech.rsqn.simpleclusterutilities.masterslave.drivers.ClusterViewDriver;
 import tech.rsqn.simpleclusterutilities.masterslave.model.Member;
 import tech.rsqn.useful.things.identifiers.UIDHelper;
@@ -11,12 +14,17 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SimpleMasterSlaveClusterSelector implements ClusterView {
-    private static Logger logger = LoggerFactory.getLogger(SimpleMasterSlaveClusterSelector.class);
+
+@Component
+public class SimpleMasterSlaveClusterView implements ClusterView , InitializingBean {
+    private static Logger LOG = LoggerFactory.getLogger(SimpleMasterSlaveClusterView.class);
+
+    @Autowired
     private ClusterViewDriver driver;
     private Member mySelf;
     private String scope;
     private boolean iAmMaster = false;
+    private Member master = null;
     private long ttlMs = 30L * 1000L;
     private long heartbeatMs = 15L * 1000L;
 
@@ -27,7 +35,7 @@ public class SimpleMasterSlaveClusterSelector implements ClusterView {
     private boolean keepRunning = false;
     private Thread t;
 
-    public SimpleMasterSlaveClusterSelector() {
+    public SimpleMasterSlaveClusterView() {
         scope = "default";
         reportedMembers = new ArrayList<>();
     }
@@ -48,6 +56,10 @@ public class SimpleMasterSlaveClusterSelector implements ClusterView {
         this.scope = scope;
     }
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        init();
+    }
 
     public void init() {
         mySelf = new Member();
@@ -67,7 +79,7 @@ public class SimpleMasterSlaveClusterSelector implements ClusterView {
                         mainLoop();
                         Thread.sleep(heartbeatMs);
                     } catch (Exception ex) {
-                        logger.error(ex.getMessage(), ex);
+                        LOG.error(ex.getMessage(), ex);
                     }
                 }
             }
@@ -99,9 +111,7 @@ public class SimpleMasterSlaveClusterSelector implements ClusterView {
     }
 
     private synchronized void determineMaster() {
-
         List<Member> members = driver.fetchMembers(scope);
-
         // remove expired
         members.stream().filter((m) -> m.isExpired()).forEach((expired) -> driver.remove(expired));
         members = driver.fetchMembers(scope);
@@ -131,25 +141,25 @@ public class SimpleMasterSlaveClusterSelector implements ClusterView {
         }
 
         if (mySelf.getStartTime() + stabilisationPeriodMs > System.currentTimeMillis()) {
-            logger.trace("still in stabilisation period");
+            LOG.info("In stabilisation period " + this.toString());
             return;
         }
 
-        Member master = members.get(0);
-        boolean iWasMaster = iAmMaster;
-
+        Member detectedMaster = members.get(0);
+        if ( master == null ) {
+            LOG.info("First master selection " + detectedMaster);
+        } else {
+            if ( !detectedMaster.equals(master)) {
+                LOG.info("New master selected " + detectedMaster);
+            }
+        }
+        master = detectedMaster;
         if (master.equals(mySelf)) {
             iAmMaster = true;
         } else {
             iAmMaster = false;
         }
-
-        if (iWasMaster != iAmMaster) {
-            logger.info("Master state change from " + iWasMaster + " to " + iAmMaster);
-        }
-
-        logger.trace("Members size is " + members.size());
-
+        LOG.trace(this.toString());
     }
 
 
@@ -172,10 +182,9 @@ public class SimpleMasterSlaveClusterSelector implements ClusterView {
 
     @Override
     public String toString() {
-        return "SimpleMasterSlaveSelector{" +
-                "mySelf=" + mySelf +
-                ", iAmMaster=" + iAmMaster +
-                ", reportedMembers=" + reportedMembers +
-                '}';
+        return "ClusterView[iAmMaster(" + iAmMaster +
+                ") Master(" + master +
+                ") Self(" + mySelf +
+                ") Members(" + reportedMembers.size() + ":" + reportedMembers + ")";
     }
 }

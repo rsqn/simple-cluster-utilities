@@ -13,9 +13,9 @@ import java.util.List;
 public class TopicClusterViewTest {
     private TopicClusterViewDriver driver;
     private Topic topic;
-    private SimpleMasterSlaveClusterSelector selectorA;
-    private SimpleMasterSlaveClusterSelector selectorB;
-    private SimpleMasterSlaveClusterSelector selectorC;
+    private SimpleMasterSlaveClusterView selectorA;
+    private SimpleMasterSlaveClusterView selectorB;
+    private SimpleMasterSlaveClusterView selectorC;
 
     @BeforeMethod
     public void setUp() {
@@ -24,19 +24,19 @@ public class TopicClusterViewTest {
         driver.setTopic(topic);
         driver.init();
 
-        selectorA = new SimpleMasterSlaveClusterSelector();
+        selectorA = new SimpleMasterSlaveClusterView();
         selectorA.setScope("test");
         selectorA.setTtlMs(100);
         selectorA.setHeartbeatMs(10);
         selectorA.setDriver(driver);
 
-        selectorB = new SimpleMasterSlaveClusterSelector();
+        selectorB = new SimpleMasterSlaveClusterView();
         selectorB.setScope("test");
         selectorB.setTtlMs(100);
         selectorB.setHeartbeatMs(10);
         selectorB.setDriver(driver);
 
-        selectorC = new SimpleMasterSlaveClusterSelector();
+        selectorC = new SimpleMasterSlaveClusterView();
         selectorC.setScope("test");
         selectorC.setTtlMs(100);
         selectorC.setHeartbeatMs(10);

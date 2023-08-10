@@ -71,7 +71,10 @@ public class Member implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null) return false;
+        if (!(o instanceof Member)) {
+            return false;
+        }
         Member that = (Member) o;
         return Objects.equals(scope, that.scope) && Objects.equals(id, that.id);
     }
@@ -83,12 +86,6 @@ public class Member implements Serializable {
 
     @Override
     public String toString() {
-        return "MasterSlaveMember{" +
-                "scope='" + scope + '\'' +
-                ", id='" + id + '\'' +
-                ", startTime=" + startTime +
-                ", expires=" + expires +
-                ", ts=" + ts +
-                '}';
+        return scope + "/" + id;
     }
 }
