@@ -9,7 +9,7 @@
 
     <groupId>tech.rsqn.simple-cluster-utilities</groupId>
     <artifactId>simple-cluster-utilities</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>simple-cluster-utilities</name>
