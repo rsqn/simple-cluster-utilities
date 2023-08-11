@@ -3,7 +3,7 @@ package tech.rsqn.simpleclusterutilities.masterslave.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Member implements Serializable {
+public class Member implements Serializable, Cloneable {
     private String scope;
     private String id;
     private long startTime;
@@ -87,5 +87,10 @@ public class Member implements Serializable {
     @Override
     public String toString() {
         return scope + "/" + id;
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }

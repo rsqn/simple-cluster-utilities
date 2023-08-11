@@ -185,6 +185,14 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
         return master != null;
     }
 
+    public Member getSelf() {
+        try {
+            return (Member) mySelf.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Override
     public List<Member> getMembers() {
         synchronized (reportedMembers) {

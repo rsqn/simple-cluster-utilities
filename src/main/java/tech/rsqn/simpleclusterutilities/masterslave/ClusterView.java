@@ -10,5 +10,7 @@ public interface ClusterView {
 
     boolean isReady();
 
+    Member getSelf();
+
     List<Member> getMembers();
 }
