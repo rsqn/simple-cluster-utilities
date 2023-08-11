@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
@@ -9,7 +10,7 @@
 
     <groupId>tech.rsqn.simple-cluster-utilities</groupId>
     <artifactId>simple-cluster-utilities</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.7-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>simple-cluster-utilities</name>
@@ -19,8 +20,8 @@
     <scm>
         <connection>scm:git:git@github.com:rsqn/simple-cluster-utilities.git</connection>
         <developerConnection>scm:git:git@github.com:rsqn/simple-cluster-utilities.git</developerConnection>
-        <url>https://github.com/rsqn/simple-cluster-utilities</url>
-        <tag>simple-cluster-utilities-1.0.7</tag>
+        <url>https://github.com/mandrewes/simple-cluster-utilities</url>
+        <tag>HEAD</tag>
     </scm>
 
     <licenses>
