@@ -44,7 +44,7 @@ public class TopicClusterViewDriver implements ClusterViewDriver {
     }
 
     @Override
-    public List<Member> fetchMembers(String scope) {
+    public List<Member> fetchMembers() {
         return new ArrayList<>(allKnownMembers);
     }
 

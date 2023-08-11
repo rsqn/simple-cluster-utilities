@@ -13,12 +13,10 @@ public class MemberTest {
         Member b = new Member();
 
         a.setId("a");
-        a.setScope("scope");
         a.setStartTime(1);
         a.setExpires(2);
 
         b.setId("a");
-        b.setScope("scope");
         b.setStartTime(2);
         b.setExpires(3);
 
@@ -33,12 +31,10 @@ public class MemberTest {
         Member b = new Member();
 
         a.setId("a");
-        a.setScope("scope");
         a.setStartTime(1);
         a.setExpires(2);
 
         b.setId("b");
-        b.setScope("scope");
         b.setStartTime(2);
         b.setExpires(3);
 
@@ -51,7 +47,6 @@ public class MemberTest {
         Member a = new Member();
 
         a.setId("a");
-        a.setScope("scope");
         a.setStartTime(System.currentTimeMillis());
         a.setTs(System.currentTimeMillis());
         a.setTtl(50);

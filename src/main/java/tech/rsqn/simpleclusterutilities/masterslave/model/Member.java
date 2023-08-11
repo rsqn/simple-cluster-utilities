@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Member implements Serializable, Cloneable {
-    private String scope;
     private String id;
     private long startTime;
     private long expires;
@@ -43,14 +42,6 @@ public class Member implements Serializable, Cloneable {
         this.id = id;
     }
 
-    public String getScope() {
-        return scope;
-    }
-
-    public void setScope(String scope) {
-        this.scope = scope;
-    }
-
     public boolean isExpired() {
         return expires < System.currentTimeMillis();
     }
@@ -76,17 +67,17 @@ public class Member implements Serializable, Cloneable {
             return false;
         }
         Member that = (Member) o;
-        return Objects.equals(scope, that.scope) && Objects.equals(id, that.id);
+        return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(scope, id);
+        return Objects.hash(id);
     }
 
     @Override
     public String toString() {
-        return scope + "/" + id;
+        return id;
     }
 
     @Override

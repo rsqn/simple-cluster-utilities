@@ -12,5 +12,7 @@ public interface ClusterView {
 
     Member getSelf();
 
+    boolean clusterContainsMemberId(String memberId);
+
     List<Member> getMembers();
 }

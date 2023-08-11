@@ -25,19 +25,16 @@ public class TopicClusterViewTest {
         driver.init();
 
         selectorA = new SimpleMasterSlaveClusterView();
-        selectorA.setScope("test");
         selectorA.setTtlMs(100);
         selectorA.setHeartbeatMs(10);
         selectorA.setDriver(driver);
 
         selectorB = new SimpleMasterSlaveClusterView();
-        selectorB.setScope("test");
         selectorB.setTtlMs(100);
         selectorB.setHeartbeatMs(10);
         selectorB.setDriver(driver);
 
         selectorC = new SimpleMasterSlaveClusterView();
-        selectorC.setScope("test");
         selectorC.setTtlMs(100);
         selectorC.setHeartbeatMs(10);
         selectorC.setDriver(driver);
@@ -143,7 +140,7 @@ public class TopicClusterViewTest {
         selectorA.stop();
         Thread.sleep(1000);
 
-        List<Member> members = driver.fetchMembers(null);
+        List<Member> members = driver.fetchMembers();
 
         Assert.assertTrue(members.size() < 50);
     }

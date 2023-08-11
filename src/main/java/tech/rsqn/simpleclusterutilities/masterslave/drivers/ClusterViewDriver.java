@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface ClusterViewDriver {
 
-    List<Member> fetchMembers(String scope);
+    List<Member> fetchMembers();
 
     void remove(Member member);
 

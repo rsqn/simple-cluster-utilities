@@ -22,7 +22,6 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
     @Autowired
     private ClusterViewDriver driver;
     private Member mySelf;
-    private String scope;
     private boolean iAmMaster = false;
     private Member master = null;
     private long ttlMs = 30L * 1000L;
@@ -36,7 +35,6 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
     private Thread t;
 
     public SimpleMasterSlaveClusterView() {
-        scope = "default";
         reportedMembers = new ArrayList<>();
     }
 
@@ -52,10 +50,6 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
         this.driver = driver;
     }
 
-    public void setScope(String scope) {
-        this.scope = scope;
-    }
-
     @Override
     public void afterPropertiesSet() throws Exception {
         init();
@@ -64,8 +58,7 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
     public void init() {
         mySelf = new Member();
         mySelf.setStartTime(System.currentTimeMillis());
-        mySelf.setId("mid" + UIDHelper.generate());
-        mySelf.setScope(scope);
+        mySelf.setId("member-" + UIDHelper.generate());
         mySelf.setTtl(ttlMs);
 
         stabilisationPeriodMs = heartbeatMs * 2;
@@ -87,6 +80,11 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
 
         t.setDaemon(true);
         t.start();
+    }
+
+    @Override
+    public boolean clusterContainsMemberId(String memberId) {
+        return reportedMembers.stream().anyMatch((m) -> m.getId().equals(memberId));
     }
 
     public void stop() {
@@ -111,10 +109,10 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
     }
 
     private synchronized void determineMaster() {
-        List<Member> members = driver.fetchMembers(scope);
+        List<Member> members = driver.fetchMembers();
         // remove expired
         members.stream().filter((m) -> m.isExpired()).forEach((expired) -> driver.remove(expired));
-        members = driver.fetchMembers(scope);
+        members = driver.fetchMembers();
 
         members.sort(new Comparator<Member>() {
             @Override

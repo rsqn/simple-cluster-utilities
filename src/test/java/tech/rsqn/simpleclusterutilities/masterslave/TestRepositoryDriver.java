@@ -13,8 +13,8 @@ public class TestRepositoryDriver implements ClusterViewDriver {
     private List<Member> collection = new ArrayList<>();
 
     @Override
-    public List<Member> fetchMembers(String scope) {
-        List<Member> ret = collection.stream().filter((m) -> Objects.equals(scope,m.getScope())).collect(Collectors.toList());
+    public List<Member> fetchMembers() {
+        List<Member> ret = collection.stream().collect(Collectors.toList());
         return ret;
     }
 
