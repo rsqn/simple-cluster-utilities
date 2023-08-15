@@ -142,7 +142,10 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
             LOG.info("In stabilisation period " + this.toString());
             return;
         }
-
+        if ( members.size() == 0) {
+            LOG.warn("no members? should not get here but this will resolve " + members);
+            return;
+        }
         Member detectedMaster = members.get(0);
         boolean logView = false;
 
