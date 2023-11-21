@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import tech.rsqn.simpleclusterutilities.masterslave.drivers.ClusterViewDriver;
 import tech.rsqn.simpleclusterutilities.masterslave.model.Member;
+import tech.rsqn.useful.things.concurrency.Callback;
+import tech.rsqn.useful.things.concurrency.Notifier;
 import tech.rsqn.useful.things.identifiers.UIDHelper;
 
 import java.util.ArrayList;
@@ -18,6 +20,9 @@ import java.util.stream.Collectors;
 @Component
 public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBean {
     private static Logger LOG = LoggerFactory.getLogger(SimpleMasterSlaveClusterView.class);
+
+    private Notifier notifier = new Notifier();
+    private static final String onReady = "onReady";
 
     @Autowired
     private ClusterViewDriver driver;
@@ -83,6 +88,17 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
     }
 
     @Override
+    public void onReady(Callback cb) {
+        if (isReady()) {
+            cb.call(null);
+        } else {
+            notifier.listen(onReady, (o) -> {
+                cb.call(null);
+            });
+        }
+    }
+
+    @Override
     public boolean clusterContainsMemberId(String memberId) {
         return reportedMembers.stream().anyMatch((m) -> m.getId().equals(memberId));
     }
@@ -142,16 +158,18 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
             LOG.info("In stabilisation period " + this.toString());
             return;
         }
-        if ( members.size() == 0) {
+        if (members.size() == 0) {
             LOG.warn("no members? should not get here but this will resolve " + members);
             return;
         }
         Member detectedMaster = members.get(0);
         boolean logView = false;
+        boolean firstMasterSelected = false;
 
         if (master == null) {
             LOG.info("First master selection " + detectedMaster);
             logView = true;
+            firstMasterSelected = true;
         } else {
             if (!detectedMaster.equals(master)) {
                 LOG.info("New master selected " + detectedMaster);
@@ -167,6 +185,10 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
         LOG.trace(this.toString());
         if (logView) {
             LOG.info(this.toString());
+        }
+        if ( firstMasterSelected ) {
+            notifier.send(onReady,null);
+            notifier.removeAllListeners();
         }
     }
 

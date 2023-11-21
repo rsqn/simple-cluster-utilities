@@ -7,16 +7,18 @@ import tech.rsqn.simpleclusterutilities.masterslave.model.Member;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 public class TestRepositoryDriver implements ClusterViewDriver {
-    private List<Member> collection = new ArrayList<>();
+    private List<Member> collection = new CopyOnWriteArrayList<>();
 
     @Override
     public List<Member> fetchMembers() {
         List<Member> ret = collection.stream().collect(Collectors.toList());
         return ret;
     }
+
 
     public List<Member> getAllMembers() {
         List<Member> ret = collection.stream().collect(Collectors.toList());
