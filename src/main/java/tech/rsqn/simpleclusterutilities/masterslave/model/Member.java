@@ -1,6 +1,7 @@
 package tech.rsqn.simpleclusterutilities.masterslave.model;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 public class Member implements Serializable, Cloneable {
@@ -9,6 +10,7 @@ public class Member implements Serializable, Cloneable {
     private long expires;
     private long ts;
     private long ttl;
+    private String tag;
 
     public long getExpires() {
         return expires;
@@ -59,6 +61,14 @@ public class Member implements Serializable, Cloneable {
         setExpires(getTs() + ttl);
     }
 
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -77,7 +87,10 @@ public class Member implements Serializable, Cloneable {
 
     @Override
     public String toString() {
-        return id;
+        return "Member{" +
+                "id='" + id + '\'' +
+                ", tag='" + tag + '\'' +
+                '}';
     }
 
     @Override

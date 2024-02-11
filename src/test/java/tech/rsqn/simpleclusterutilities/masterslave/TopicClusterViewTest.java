@@ -16,6 +16,7 @@ public class TopicClusterViewTest {
     private SimpleMasterSlaveClusterView selectorA;
     private SimpleMasterSlaveClusterView selectorB;
     private SimpleMasterSlaveClusterView selectorC;
+    private SimpleMasterSlaveClusterView selectorD;
 
     @BeforeMethod
     public void setUp() {
@@ -28,16 +29,27 @@ public class TopicClusterViewTest {
         selectorA.setTtlMs(100);
         selectorA.setHeartbeatMs(10);
         selectorA.setDriver(driver);
+        selectorA.setTag("testA");
 
         selectorB = new SimpleMasterSlaveClusterView();
         selectorB.setTtlMs(100);
         selectorB.setHeartbeatMs(10);
         selectorB.setDriver(driver);
+        selectorB.setTag("testA");
 
         selectorC = new SimpleMasterSlaveClusterView();
         selectorC.setTtlMs(100);
         selectorC.setHeartbeatMs(10);
         selectorC.setDriver(driver);
+        selectorC.setTag("testA");
+
+        selectorD = new SimpleMasterSlaveClusterView();
+        selectorD.setTtlMs(100);
+        selectorD.setHeartbeatMs(10);
+        selectorD.setDriver(driver);
+        selectorD.setTag("testB");
+
+
     }
 
     @AfterMethod
@@ -45,6 +57,8 @@ public class TopicClusterViewTest {
         selectorA.stop();
         selectorB.stop();
         selectorC.stop();
+        selectorD.stop();
+
     }
 
     @Test
@@ -61,7 +75,12 @@ public class TopicClusterViewTest {
 
         selectorC.init();
         selectorC.setTtlMs(25);
-        selectorA.setHeartbeatMs(10);
+        selectorC.setHeartbeatMs(10);
+        Thread.sleep(100);
+
+        selectorD.init();
+        selectorD.setTtlMs(25);
+        selectorD.setHeartbeatMs(10);
         Thread.sleep(100);
 
         Thread.sleep(500);
@@ -89,7 +108,12 @@ public class TopicClusterViewTest {
 
         selectorC.init();
         selectorC.setTtlMs(25);
-        selectorA.setHeartbeatMs(10);
+        selectorC.setHeartbeatMs(10);
+        Thread.sleep(100);
+
+        selectorD.init();
+        selectorD.setTtlMs(25);
+        selectorD.setHeartbeatMs(10);
         Thread.sleep(100);
 
         Thread.sleep(500);
@@ -124,7 +148,12 @@ public class TopicClusterViewTest {
 
         selectorC.init();
         selectorC.setTtlMs(25);
-        selectorA.setHeartbeatMs(10);
+        selectorC.setHeartbeatMs(10);
+        Thread.sleep(100);
+
+        selectorD.init();
+        selectorD.setTtlMs(25);
+        selectorD.setHeartbeatMs(10);
         Thread.sleep(100);
 
         Thread.sleep(500);
@@ -140,7 +169,56 @@ public class TopicClusterViewTest {
         selectorA.stop();
         Thread.sleep(1000);
 
-        List<Member> members = driver.fetchMembers();
+        List<Member> members = driver.fetchMembersWithAnyTag();
+
+        Assert.assertTrue(members.size() < 50);
+    }
+
+    @Test
+    public void shouldNotFindDInMembersAndShoulFindItInOtherMembers() throws Exception {
+        selectorA.init();
+        selectorA.setTtlMs(25);
+        selectorA.setHeartbeatMs(10);
+        Thread.sleep(100);
+
+        selectorB.init();
+        selectorB.setTtlMs(25);
+        selectorB.setHeartbeatMs(10);
+        Thread.sleep(100);
+
+        selectorC.init();
+        selectorC.setTtlMs(25);
+        selectorC.setHeartbeatMs(10);
+        Thread.sleep(100);
+
+        selectorD.init();
+        selectorD.setTtlMs(25);
+        selectorD.setHeartbeatMs(10);
+        Thread.sleep(100);
+
+        Thread.sleep(500);
+
+        System.out.println(selectorA.getMembers());
+        Assert.assertFalse(selectorB.isMaster());
+        Assert.assertFalse(selectorC.isMaster());
+        Assert.assertTrue(selectorA.isMaster());
+
+        Assert.assertEquals(3, selectorA.getMembers().size());
+        Assert.assertEquals(3, selectorC.getMembers().size());
+
+        for (Member member : selectorA.getMembers()) {
+            if ( member.getTag().equals("testB")) {
+                Assert.fail();
+            }
+        }
+        Assert.assertEquals(1, selectorA.getNonMembersWithTag("testB").size());
+        Assert.assertEquals(3, selectorA.getNonMembersWithTag("testA").size());
+        Assert.assertEquals(1, selectorD.getMembers().size());
+
+        selectorA.stop();
+        Thread.sleep(1000);
+
+        List<Member> members = driver.fetchMembersWithAnyTag();
 
         Assert.assertTrue(members.size() < 50);
     }

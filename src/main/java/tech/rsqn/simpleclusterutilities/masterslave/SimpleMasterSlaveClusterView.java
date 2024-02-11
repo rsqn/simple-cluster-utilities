@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import tech.rsqn.simpleclusterutilities.masterslave.drivers.ClusterViewDriver;
 import tech.rsqn.simpleclusterutilities.masterslave.model.Member;
 import tech.rsqn.useful.things.concurrency.Callback;
@@ -31,13 +33,14 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
     private Member master = null;
     private long ttlMs = 30L * 1000L;
     private long heartbeatMs = 15L * 1000L;
-
     private long stabilisationPeriodMs = heartbeatMs * 2;
 
     private List<Member> reportedMembers;
-
     private boolean keepRunning = false;
     private Thread t;
+
+    @Value("${SimpleMasterSlaveClusterView.tag:default}")
+    private String tag = "default";
 
     public SimpleMasterSlaveClusterView() {
         reportedMembers = new ArrayList<>();
@@ -55,6 +58,10 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
         this.driver = driver;
     }
 
+    public void setTag(String t) {
+        this.tag = t;
+    }
+
     @Override
     public void afterPropertiesSet() throws Exception {
         init();
@@ -65,7 +72,7 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
         mySelf.setStartTime(System.currentTimeMillis());
         mySelf.setId("member-" + UIDHelper.generate());
         mySelf.setTtl(ttlMs);
-
+        mySelf.setTag(tag);
         stabilisationPeriodMs = heartbeatMs * 2;
 
         keepRunning = true;
@@ -125,10 +132,10 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
     }
 
     private synchronized void determineMaster() {
-        List<Member> members = driver.fetchMembers();
+        List<Member> members = driver.fetchMembersWithTag(tag);
         // remove expired
         members.stream().filter((m) -> m.isExpired()).forEach((expired) -> driver.remove(expired));
-        members = driver.fetchMembers();
+        members = driver.fetchMembersWithTag(tag);
 
         members.sort(new Comparator<Member>() {
             @Override
@@ -221,6 +228,14 @@ public class SimpleMasterSlaveClusterView implements ClusterView, InitializingBe
         synchronized (reportedMembers) {
             return new ArrayList<>(reportedMembers);
         }
+    }
+
+    @Override
+    /**
+     * This runs under the assumption that whatever is handling housekeeping for this other tag is doing its job
+     */
+    public List<Member> getNonMembersWithTag(String tag) {
+        return driver.fetchMembersWithTag(tag);
     }
 
     @Override

@@ -8,6 +8,8 @@ import tech.rsqn.simpleclusterutilities.topics.Topic;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class TopicClusterViewDriver implements ClusterViewDriver {
     private static Logger logger = LoggerFactory.getLogger(TopicClusterViewDriver.class);
@@ -44,10 +46,14 @@ public class TopicClusterViewDriver implements ClusterViewDriver {
     }
 
     @Override
-    public List<Member> fetchMembers() {
-        return new ArrayList<>(allKnownMembers);
+    public List<Member> fetchMembersWithTag(String tag) {
+        return allKnownMembers.stream().filter((m) -> Objects.equals(tag,m.getTag())).collect(Collectors.toList());
     }
 
+    @Override
+    public List<Member> fetchMembersWithAnyTag() {
+        return new ArrayList<>(allKnownMembers);
+    }
 
     @Override
     public void sendHeartBeat(Member member) {

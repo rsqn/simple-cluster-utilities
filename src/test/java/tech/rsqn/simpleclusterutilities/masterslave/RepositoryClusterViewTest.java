@@ -134,7 +134,7 @@ public class RepositoryClusterViewTest {
         selectorA.stop();
         Thread.sleep(1000);
 
-        List<Member> members = driver.getAllMembers();
+        List<Member> members = driver.fetchMembersWithTag("default");
 
         Assert.assertTrue(members.size() < 50);
     }

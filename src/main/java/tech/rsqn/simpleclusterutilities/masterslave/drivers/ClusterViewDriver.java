@@ -6,7 +6,9 @@ import java.util.List;
 
 public interface ClusterViewDriver {
 
-    List<Member> fetchMembers();
+    List<Member> fetchMembersWithTag(String tag);
+
+    List<Member> fetchMembersWithAnyTag();
 
     void remove(Member member);
 

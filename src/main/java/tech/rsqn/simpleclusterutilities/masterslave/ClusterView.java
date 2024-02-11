@@ -18,4 +18,7 @@ public interface ClusterView {
     void onReady(Callback cb);
 
     List<Member> getMembers();
+
+    List<Member> getNonMembersWithTag(String tag);
+
 }

@@ -13,14 +13,15 @@ import java.util.stream.Collectors;
 public class TestRepositoryDriver implements ClusterViewDriver {
     private List<Member> collection = new CopyOnWriteArrayList<>();
 
+
     @Override
-    public List<Member> fetchMembers() {
-        List<Member> ret = collection.stream().collect(Collectors.toList());
+    public List<Member> fetchMembersWithTag(String tag) {
+        List<Member> ret = collection.stream().filter((m) -> Objects.equals(tag,m.getTag())).collect(Collectors.toList());
         return ret;
     }
 
-
-    public List<Member> getAllMembers() {
+    @Override
+    public List<Member> fetchMembersWithAnyTag() {
         List<Member> ret = collection.stream().collect(Collectors.toList());
         return ret;
     }
